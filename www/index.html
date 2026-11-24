@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Luna RP">
+    <meta name="theme-color" content="#0c0d0e">
+    <title>Luna RP • Roleplay Studio</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/avatars/luna.png">
+    <link rel="apple-touch-icon" href="/avatars/luna.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Top App Bar -->
+        <header class="top-bar">
+            <button type="button" class="character-header-info" id="btn-open-character" aria-label="Open character, scenarios, and chats">
+                <div class="avatar-wrapper">
+                    <img id="header-avatar" src="/avatars/luna.png" alt="Character Avatar" class="avatar-img">
+                    <span class="status-indicator" aria-hidden="true"></span>
+                </div>
+                <div class="char-meta">
+                    <div class="char-name-row">
+                        <span id="header-char-name" class="char-name">Luna</span>
+                        <span id="header-scenario-badge" class="scenario-badge">Scenario 1</span>
+                    </div>
+                    <span id="header-status-text" class="status-text">Favorite Person • Tap for chats &amp; scenes</span>
+                </div>
+            </button>
+
+            <div class="header-actions">
+                <button type="button" id="btn-open-models" class="model-pill" title="Switch Model" aria-label="Switch AI model">
+                    <span class="pill-dot" id="active-model-dot"></span>
+                    <span id="active-model-name" class="pill-text">Nemotron 550B</span>
+                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+
+                <button type="button" id="btn-open-gallery" class="icon-btn" title="Scene Gallery" aria-label="Open scene visuals gallery">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </button>
+
+                <button type="button" id="btn-open-settings" class="icon-btn" title="Persona & Preferences" aria-label="Open persona and settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <main class="chat-viewport" id="chat-viewport">
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages dynamically rendered here -->
+            </div>
+        </main>
+        <button type="button" id="btn-scroll-bottom" class="scroll-bottom-btn hidden" title="Scroll to bottom" aria-label="Scroll to latest message">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+
+        <!-- Bottom Input Bar -->
+        <footer class="input-dock">
+            <div class="input-wrapper">
+                <button type="button" id="btn-quick-illustrate" class="dock-action-btn" title="Illustrate Latest Scene (2x)" aria-label="Illustrate latest scene">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </button>
+
+                <textarea id="chat-input" placeholder="Message or *action*..." rows="1" maxlength="6000" aria-label="Roleplay message input"></textarea>
+
+                <button type="button" id="btn-send" class="send-btn" title="Send message" aria-label="Send message" disabled>
+                    <svg id="icon-send" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    <svg id="icon-stop" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                </button>
+            </div>
+        </footer>
+
+        <!-- Slide Drawer: Models & API Settings -->
+        <div id="drawer-models" class="drawer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="drawer-models-title">
+            <div class="drawer-sheet">
+                <div class="drawer-handle"></div>
+                <div class="drawer-header">
+                    <h3 id="drawer-models-title">Model &amp; Parameters</h3>
+                    <button type="button" class="drawer-close-btn" data-close="drawer-models" aria-label="Close models drawer">&times;</button>
+                </div>
+                <div class="drawer-body">
+                    <p class="section-desc">Verified free NVIDIA NIM models and frontier Claude models.</p>
+
+                    <div class="models-list" id="models-list"></div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="parameter-controls">
+                        <div class="param-row">
+                            <label for="slider-temp"><span>Temperature</span> <span id="val-temp" class="mono-val">0.85</span></label>
+                            <input type="range" id="slider-temp" min="0.4" max="1.3" step="0.05" value="0.85">
+                        </div>
+                        <div class="param-row">
+                            <label for="slider-tokens"><span>Max Response Tokens</span> <span id="val-tokens" class="mono-val">1024</span></label>
+                            <input type="range" id="slider-tokens" min="256" max="4096" step="128" value="1024">
+                        </div>
+                    </div>
+
+                    <div class="custom-api-box">
+                        <details id="custom-api-details">
+                            <summary>Custom OpenAI-Compatible Endpoint</summary>
+                            <div class="custom-fields">
+                                <input type="url" id="custom-api-url" placeholder="https://api.example.com/v1" autocomplete="off">
+                                <input type="password" id="custom-api-key" placeholder="API Key (sk-...)" autocomplete="off">
+                                <input type="text" id="custom-model-id" placeholder="Model ID (e.g. gpt-4o)" autocomplete="off">
+                                <div class="custom-btn-row">
+                                    <button type="button" id="btn-save-custom-api" class="btn-primary">Use Custom API</button>
+                                    <button type="button" id="btn-clear-custom-api" class="btn-secondary">Reset</button>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide Drawer: Character, Scenarios & Saved Chats -->
+        <div id="drawer-character" class="drawer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="drawer-char-title">
+            <div class="drawer-sheet">
+                <div class="drawer-handle"></div>
+                <div class="drawer-header">
+                    <h3 id="drawer-char-title">Characters, Scenarios &amp; Chats</h3>
+                    <button type="button" class="drawer-close-btn" data-close="drawer-character" aria-label="Close character drawer">&times;</button>
+                </div>
+                <div class="drawer-body">
+                    <!-- Character Switcher + Import -->
+                    <div class="section-row-header">
+                        <h4 class="section-title">Characters</h4>
+                        <label class="import-chip" for="input-import-card" title="Import SillyTavern .png or .json card">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span>Import Card</span>
+                            <input type="file" id="input-import-card" accept=".png,.json,image/png,application/json" hidden>
+                        </label>
+                    </div>
+                    <div class="characters-strip" id="characters-strip"></div>
+
+                    <!-- Active Character Card Summary -->
+                    <div class="char-summary-card">
+                        <img id="card-char-avatar" src="/avatars/luna.png" class="summary-avatar" alt="Character">
+                        <div class="summary-info">
+                            <h4 id="card-char-name">Luna</h4>
+                            <p id="card-char-tagline" class="summary-tagline">21 y/o • BPD Girlfriend • Clingy &amp; Passionate</p>
+                            <div class="psych-tags" id="card-char-tags"></div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons-row">
+                        <button type="button" id="btn-new-chat" class="btn-primary-outline">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                            New Chat
+                        </button>
+                        <button type="button" id="btn-export-chat" class="btn-primary-outline">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Export (.md)
+                        </button>
+                    </div>
+
+                    <h4 class="section-title">Scenario Hooks</h4>
+                    <div class="scenarios-list" id="scenarios-list"></div>
+
+                    <div class="settings-divider"></div>
+                    <h4 class="section-title">Saved Sessions</h4>
+                    <div class="sessions-list" id="sessions-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide Drawer: User Persona -->
+        <div id="drawer-persona" class="drawer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="drawer-persona-title">
+            <div class="drawer-sheet">
+                <div class="drawer-handle"></div>
+                <div class="drawer-header">
+                    <h3 id="drawer-persona-title">Your Persona ({{user}})</h3>
+                    <button type="button" class="drawer-close-btn" data-close="drawer-persona" aria-label="Close persona drawer">&times;</button>
+                </div>
+                <div class="drawer-body">
+                    <div class="form-group">
+                        <label for="persona-name">Your Name in Roleplay</label>
+                        <input type="text" id="persona-name" value="Aymen" placeholder="Aymen">
+                    </div>
+                    <div class="form-group">
+                        <label for="persona-desc">Your Appearance &amp; Dynamic</label>
+                        <textarea id="persona-desc" rows="4" placeholder="Loving boyfriend and Favorite Person. Gentle, protective, grounding, and deeply affectionate."></textarea>
+                    </div>
+                    <button type="button" id="btn-save-persona" class="btn-primary">Save Persona</button>
+
+                    <div class="settings-divider"></div>
+                    <download-app id="download-app-widget" variant="settings" manifest-url="/api/apk/latest.json"></download-app>
+                    <div class="network-info-card" id="network-info-card">
+                        <span class="network-label">Phone / LAN Access</span>
+                        <span class="network-urls" id="network-urls">Checking local IP...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide Drawer: Scene Gallery -->
+        <div id="drawer-gallery" class="drawer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="drawer-gallery-title">
+            <div class="drawer-sheet">
+                <div class="drawer-handle"></div>
+                <div class="drawer-header">
+                    <h3 id="drawer-gallery-title">Scene Visuals Gallery</h3>
+                    <button type="button" class="drawer-close-btn" data-close="drawer-gallery" aria-label="Close gallery drawer">&times;</button>
+                </div>
+                <div class="drawer-body">
+                    <p class="section-desc">Saved 2x scene illustrations across your chats.</p>
+                    <div id="gallery-grid" class="gallery-grid">
+                        <p class="empty-gallery-text">No scenes illustrated yet. Tap the camera icon on any message to generate 2 scene visuals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Sheet: Edit Message -->
+        <div id="modal-edit" class="drawer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
+            <div class="drawer-sheet">
+                <div class="drawer-handle"></div>
+                <div class="drawer-header">
+                    <h3 id="modal-edit-title">Edit Message</h3>
+                    <button type="button" class="drawer-close-btn" id="btn-close-edit" aria-label="Close editor">&times;</button>
+                </div>
+                <div class="drawer-body">
+                    <textarea id="edit-message-textarea" class="edit-textarea" rows="7" placeholder="Edit message text..."></textarea>
+                    <div class="action-buttons-row">
+                        <button type="button" id="btn-save-edit" class="btn-primary">Save Changes</button>
+                        <button type="button" id="btn-save-edit-regen" class="btn-primary-outline hidden">Save &amp; Regenerate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Sheet: Confirm Dialog -->
+        <div id="modal-confirm" class="drawer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+            <div class="drawer-sheet confirm-sheet">
+                <div class="drawer-handle"></div>
+                <div class="drawer-header">
+                    <h3 id="confirm-title">Confirm Action</h3>
+                    <button type="button" class="drawer-close-btn" id="btn-confirm-cancel-x" aria-label="Cancel">&times;</button>
+                </div>
+                <div class="drawer-body">
+                    <p id="confirm-message" class="confirm-message"></p>
+                    <div class="action-buttons-row">
+                        <button type="button" id="btn-confirm-cancel" class="btn-primary-outline">Cancel</button>
+                        <button type="button" id="btn-confirm-ok" class="btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox-modal" class="lightbox-modal hidden" role="dialog" aria-modal="true" aria-label="Scene image viewer">
+            <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close image viewer">&times;</button>
+            <div class="lightbox-content">
+                <img id="lightbox-img" src="" alt="Scene Visual">
+                <div class="lightbox-footer">
+                    <p id="lightbox-prompt" class="lightbox-prompt"></p>
+                    <div class="lightbox-actions">
+                        <button type="button" id="lightbox-copy-prompt" class="lightbox-secondary-btn">Copy Prompt</button>
+                        <a id="lightbox-download" href="" download="scene_visual.jpg" class="lightbox-download-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Save Image
+                        </a>
+                        <button type="button" id="lightbox-delete" class="lightbox-danger-btn hidden">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast-banner" class="toast-banner hidden" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="/download-app.js"></script>
+    <script src="/app.js"></script>
+</body>
+</html>

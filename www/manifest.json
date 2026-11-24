@@ -1,0 +1,19 @@
+{
+  "name": "Luna RP Studio",
+  "short_name": "Luna RP",
+  "description": "Mobile-first Roleplay Studio with Free & Frontier Models and Live Scene Visuals",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0d0e",
+  "theme_color": "#0c0d0e",
+  "icons": [
+    {
+      "src": "/avatars/luna.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

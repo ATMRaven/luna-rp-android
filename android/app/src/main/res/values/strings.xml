@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Luna RP</string>
+    <string name="title_activity_main">Luna RP</string>
+    <string name="package_name">com.atmr.lunarp</string>
+    <string name="custom_url_scheme">com.atmr.lunarp</string>
+</resources>
